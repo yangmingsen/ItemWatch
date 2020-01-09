@@ -75,6 +75,29 @@ public class ItemDao {
 		return null;
     }
     
+    public String findNameById(Long id) {
+    	PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT name FROM as_auction_item WHERE id=?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setLong(1, id);
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				return rs.getString("name");
+			}
+		}catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return null;
+    }
+    
     public int updateStatus(Long itemId, String status) {
     	 PreparedStatement pstmt = null;
     	 

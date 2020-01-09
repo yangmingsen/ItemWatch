@@ -8,10 +8,13 @@ import java.util.Date;
 import com.auction.model.dao.AsBidRecordDao;
 import com.auction.model.dao.ItemDao;
 import com.auction.model.dao.OrderDao;
+import com.auction.model.dao.UserDao;
 import com.auction.model.entity.BidRecordEntity;
+import com.auction.model.entity.ContactEntity;
 import com.auction.model.entity.OrderEntity;
 import com.auction.queue.MessageQueue;
 import com.auction.util.DateHelper;
+import com.auction.util.Mail;
 
 /***
  * 描述：
@@ -65,7 +68,14 @@ public class MessageListener implements Runnable{
 			//ItemDao.getInstance().updateStatus(itemId, "4");
 			
 			//发送邮件
-			
+			String to = UserDao.getInstance().findEmailAddrByUsername(maxBidRecord.getBuyerId());
+			String subject = "恭喜您获得拍品: "+ItemDao.getInstance().findNameById(itemId);
+			String info = "获得日期："+DateHelper.getYYYY_MM_DD_HH_MM_SS();
+			ContactEntity contact = new ContactEntity(null, to, subject, info, DateHelper.getYYYY_MM_DD_HH_MM_SS());
+			boolean send = Mail.send(contact);
+			if (!send) {
+				System.out.println("send Mail: faild");
+			}
 			
 		}
 		
